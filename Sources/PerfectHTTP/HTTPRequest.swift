@@ -127,10 +127,10 @@ public extension HTTPRequest {
         guard let cookie = self.header(.cookie) else {
             return [(String, String)]()
         }
-        return cookie.characters.split(separator: ";").flatMap {
+        return cookie.split(separator: ";").flatMap {
             let d = $0.split(separator: "=")//.flatMap { String($0).stringByDecodingURL }
             guard d.count == 2 else { return nil }
-			let d2 = d.map { String($0.filter { $0 != Character(" ") }).stringByDecodingURL ?? "" }
+			let d2 = d.map { String(String($0).filter { $0 != Character(" ") }).stringByDecodingURL ?? "" }
             return (d2[0], d2[1])
         }
     }

@@ -154,7 +154,7 @@ public struct Routes {
 	
 	static func sanitizeUri(_ uri: String) -> String {
 		let endSlash = uri.hasSuffix("/")
-		let split = uri.characters.split(separator: "/").map(String.init)
+		let split = uri.split(separator: "/").map(String.init)
 		let ret = "/" + split.joined(separator: "/") + (endSlash ? "/" : "")
 		return ret
 	}
@@ -300,8 +300,8 @@ private enum RouteItemType {
 			self = .trailingWildcard
 		} else if comp == "/" {
 			self = .trailingSlash
-		} else if comp.characters.count >= 3 && comp[comp.startIndex] == "{" && comp[comp.index(before: comp.endIndex)] == "}" {
-			self = .variable(comp[comp.index(after: comp.startIndex)..<comp.index(before: comp.endIndex)])
+		} else if comp.count >= 3 && comp[comp.startIndex] == "{" && comp[comp.index(before: comp.endIndex)] == "}" {
+			self = .variable(String(comp[comp.index(after: comp.startIndex)..<comp.index(before: comp.endIndex)]))
 		} else {
 			self = .path
 		}
@@ -311,10 +311,9 @@ private enum RouteItemType {
 class RouteNode {
 	
 	typealias ComponentGenerator = IndexingIterator<[String]>
-	
 	var handler: RouteMap.RequestHandler?
-	var trailingWildCard: RouteNode?
-	var wildCard: RouteNode?
+    var trailingWildCard: RouteNode?
+    var wildCard: RouteNode?
 	var variables = [RouteNode]()
 	var subNodes = [String:RouteNode]()
 	var terminal = true // an end point. not an intermediary
@@ -329,16 +328,16 @@ class RouteNode {
 	}
 	
 	func appendToHandlers(_ handlers: [RouteMap.RequestHandler?]) -> [RouteMap.RequestHandler?] {
-		// terminal handlers are not included in chaining
-		if terminal {
+        // terminal handlers are not included in chaining
+        if terminal {
 			return handlers
 		}
 		return [handler] + handlers
 	}
 	
 	func findHandler(currentComponent curComp: String, generator: ComponentGenerator, webRequest: HTTPRequest) -> [RouteMap.RequestHandler?]? {
-		var m = generator
-		if let p = m.next() {
+        var m = generator
+        if let p = m.next() {
 			
 			// variables
 			for node in self.variables {
@@ -585,13 +584,15 @@ class RouteVariable: RouteNode {
 	}
 }
 
+
+
 // -- old --
 // ALL code below this is obsolete but remains to provide compatability 1.0 based solutions.
 // For 1.0 compatability only.
+
 public var compatRoutes: Routes?
 
 // Holds the registered routes.
-@available(*, deprecated, message: "Use new Routes API instead")
 public struct RouteMap: CustomStringConvertible {
 	
 	public typealias RequestHandler = (HTTPRequest, HTTPResponse) -> ()
@@ -653,8 +654,7 @@ public struct RouteMap: CustomStringConvertible {
 	}
 }
 
-@available(*, deprecated, message: "Use new Routes API instead")
 public struct Routing {
 	static public var Routes = RouteMap()
 	private init() {}
-}
+ }
