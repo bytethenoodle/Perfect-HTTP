@@ -301,7 +301,7 @@ private enum RouteItemType {
 		} else if comp == "/" {
 			self = .trailingSlash
 		} else if comp.count >= 3 && comp[comp.startIndex] == "{" && comp[comp.index(before: comp.endIndex)] == "}" {
-			self = .variable(String(comp[comp.index(after: comp.startIndex)..<comp.index(before: comp.endIndex)]))
+			self = .variable(comp[comp.index(after: comp.startIndex)..<comp.index(before: comp.endIndex)])
 		} else {
 			self = .path
 		}

@@ -206,13 +206,12 @@ public final class MimeReader {
 				return .stateNone
 				
 			case .stateBoundary:
-				
-				if position.distance(to: end) < self.boundary.count + 2 {
-					self.buffer = Array(byts[position..<end])
+				if position.distance(to: end) < boundary.count + 2 {
+					buffer = Array(byts[position..<end])
 					clearBuffer = false
 					position = end
 				} else {
-					position = position.advanced(by: self.boundary.count)
+					position = position.advanced(by: boundary.count)
 					if byts[position] == mime_dash && byts[position.advanced(by: 1)] == mime_dash {
 						self.state = .stateDone
 						position = position.advanced(by: 2)
@@ -226,7 +225,6 @@ public final class MimeReader {
 						position = end
 					}
 				}
-				
 			case .stateHeader:
 				
 				var eolPos = position
